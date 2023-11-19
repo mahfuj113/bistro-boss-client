@@ -24,7 +24,7 @@ const DashBoard = () => {
                             <li><NavLink to={'/dashboard/reservation'}><FaCalendar></FaCalendar> Reservation</NavLink></li>
                             <li><NavLink to={'/dashboard/cart'}><FaShoppingCart></FaShoppingCart> My cart({cart.length})</NavLink></li>
                             <li><NavLink to={'/dashboard/review'}><FaAd></FaAd> Add A Review</NavLink></li>
-                            <li><NavLink to={'/dashboard/bookings'}><FaList></FaList> My Bookings</NavLink></li>
+                            <li><NavLink to={'/dashboard/paymentHistory'}><FaList></FaList>Payment History</NavLink></li>
                         </>
                     }
                     <div className="divider"></div>

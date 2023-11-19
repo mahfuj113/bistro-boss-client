@@ -2,6 +2,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import useCart from "../../../hooks/useCart";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
     const [cart, refetch] = useCart()
@@ -17,28 +18,30 @@ const Cart = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-            axiosSecure.delete(`/carts/${id}`)
-            .then(res => {
-                if(res.data.deletedCount > 0){
-                    refetch()
-                    Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
-                            icon: "success"
-                          });
-                }
-            })
+                axiosSecure.delete(`/carts/${id}`)
+                    .then(res => {
+                        if (res.data.deletedCount > 0) {
+                            refetch()
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
+                            });
+                        }
+                    })
             }
-          });
+        });
     }
     return (
         <div>
             <div className="flex justify-evenly mb-8">
                 <h2 className="text-4xl">Items:{cart.length}</h2>
                 <h2 className="text-4xl">Total price:{totalPrice}</h2>
-                <button className="btn btn-primary">Pay</button>
+                {cart.length > 0 ? <Link to='/dashboard/payment'>
+                    <button className="btn btn-primary">Pay</button>
+                </Link> : <button disabled className="btn btn-primary">Pay</button>}
             </div>
             <div className="overflow-x-auto">
                 <table className="table w-full">
@@ -75,7 +78,7 @@ const Cart = () => {
                                 <th>
                                     <button className="btn btn-ghost btn-lg" onClick={() => handleDelete(item._id)}>
                                         <FaTrashAlt className="text-red-600"></FaTrashAlt>
-                                        </button>
+                                    </button>
                                 </th>
                             </tr>)
                         }
