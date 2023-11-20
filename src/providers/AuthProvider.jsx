@@ -6,7 +6,7 @@ import useAxiosPublic from "../hooks/useAxiosPublic";
 export const AuthContext = createContext(null)
 const auth = getAuth(app);
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     const googleProvider = new GoogleAuthProvider()
@@ -16,12 +16,12 @@ const AuthProvider = ({children}) => {
     //create user
     const userSignUp = (email, password) => {
         setLoading(true)
-       return createUserWithEmailAndPassword(auth,email,password)
+        return createUserWithEmailAndPassword(auth, email, password)
     }
     // login user
-    const signIn = (email,password) => {
+    const signIn = (email, password) => {
         setLoading(true)
-        return signInWithEmailAndPassword(auth,email,password)
+        return signInWithEmailAndPassword(auth, email, password)
     }
     //google login
     const googleSignIn = () => {
@@ -31,38 +31,39 @@ const AuthProvider = ({children}) => {
     // logout user
     const logOut = () => {
         setLoading(true)
-       return signOut(auth)
+        return signOut(auth)
     }
     // update profile
-    const updateUserProfile = (name,photo) => {
-       return updateProfile(auth.currentUser, {
+    const updateUserProfile = (name, photo) => {
+        return updateProfile(auth.currentUser, {
             displayName: name, photoURL: photo
-          })
+        })
     }
     // user set in state
     useEffect(() => {
-       const unsubscribe = onAuthStateChanged(auth, currentUser => {
+        const unsubscribe = onAuthStateChanged(auth, currentUser => {
             setUser(currentUser)
-       if(currentUser){
-        //
-        const userInfo = {email: currentUser.email}
-        axiosPublic.post('/jwt', userInfo)
-        .then(res => {
-            if(res.data.token){
-                localStorage.setItem('access-token', res.data.token)
+            if (currentUser) {
+                //
+                const userInfo = { email: currentUser.email }
+                axiosPublic.post('/jwt', userInfo)
+                    .then(res => {
+                        if (res.data.token) {
+                            localStorage.setItem('access-token', res.data.token)
+                            setLoading(false)
+                        }
+                    })
             }
-        })
-       }
-       else{
-        //
-        localStorage.removeItem('access-token')
-       }
-            setLoading(false)
+            else {
+                //
+                localStorage.removeItem('access-token')
+                setLoading(false)
+            }
         })
         return () => {
             unsubscribe()
         }
-    },[axiosPublic])
+    }, [axiosPublic])
 
     const authInfo = {
         user,
